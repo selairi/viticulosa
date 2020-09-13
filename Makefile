@@ -1,7 +1,8 @@
-all: webcam.py
+all: viticulosa.py
 
 run: webcam.py
-	python3 webcam.py
+	python3 viticulosa.py
 
-webcam.py: src/webcam.py src/main.glade
+viticulosa.py: src/webcam.py src/main.glade
 	cd src && python3 build.py
+	chmod +x viticulosa.py

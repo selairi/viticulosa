@@ -1,5 +1,5 @@
 
-fout = open("../webcam.py", "w")
+fout = open("../viticulosa.py", "w")
 fin = open("webcam.py")
 for linea in fin:
     if linea.startswith('#include'):
