@@ -2,6 +2,8 @@
 
 Desktop recording and shows webcam in window.
 
+![Screenshot](screenshot/main_window.png)
+
 Aplicación para grabar el escritorio en Linux y mostrar la webcam en una ventana. Está escrito en python3.
 
 # Construcción
