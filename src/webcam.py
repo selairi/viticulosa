@@ -59,7 +59,7 @@ class Handler:
         self.load_settings()
 
     def load_settings(self):
-        config = os.path.expanduser('~/.config/webcam.txt')
+        config = os.path.expanduser('~/.config/viticulosa.txt')
         if os.path.exists(config):
             fin = open(config)
             for linea in fin:
@@ -110,7 +110,7 @@ class Handler:
         elif valor == 2:
             espejo = "vertical-flip"
 
-        config = os.path.expanduser('~/.config/webcam.txt')
+        config = os.path.expanduser('~/.config/viticulosa.txt')
         if not os.path.exists(config):
             path = os.path.expanduser('~/.config')
             if not os.path.exists(path):

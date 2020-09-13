@@ -1,6 +1,6 @@
 all: viticulosa.py
 
-run: webcam.py
+run: viticulosa.py
 	python3 viticulosa.py
 
 viticulosa.py: src/webcam.py src/main.glade
