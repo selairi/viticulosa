@@ -1,2 +1,3 @@
-xterm -e "bash src/viticulosa.sh"
+cd src
+xterm -e "bash viticulosa.sh"
 
