@@ -283,7 +283,8 @@ class Handler:
         if carpeta.startswith('file://'):
             carpeta = carpeta[len('file://'):]
         fecha = datetime.datetime.now()
-        archivo = '{0}/{1}'.format(carpeta, fecha.isoformat(sep=' ', timespec='seconds').replace(':', '·'))
+        #archivo = '{0}/{1}'.format(carpeta, fecha.isoformat(sep=' ', timespec='seconds').replace(':', '·'))
+        archivo = '{0}/{1}'.format(carpeta, fecha.isoformat(sep=' ').replace(':', '·'))
         self.archivo_actual = '{0}.mp4'.format(archivo)
         print(archivo)
         #return
@@ -432,7 +433,8 @@ class Handler:
         #print(command_line)
         #args = shlex.split(command_line)
         #self.grabacion = subprocess.Popen(args)
-        command_line = 'ffmpeg: -f alsa -ac 2 -i pulse -f x11grab -r 5 -s {0}x{1} -i :0.0 -vcodec libx264 -pix_fmt yuv420p -preset ultrafast -crf 28 -threads 0 -y "{2}.mp4"'.format(self.ancho_pantalla, self.alto_pantalla, archivo).encode()
+        #command_line = 'ffmpeg: -f alsa -ac 2  -i pulse -f x11grab -r 5 -s {0}x{1} -i :0.0 -vcodec libx264 -pix_fmt yuv420p -preset ultrafast -crf 28 -threads 0 -y "{2}.mp4"'.format(self.ancho_pantalla, self.alto_pantalla, archivo).encode()
+        command_line = 'ffmpeg: -f alsa -ac 2 -i pulse -f x11grab -r 5 -s {0}x{1} -i :0.0 -vcodec libx264 -strict -2 -pix_fmt yuv420p -preset ultrafast -crf 28 -threads 0 -y "{2}.mp4"'.format(self.ancho_pantalla, self.alto_pantalla, archivo).encode()
         print(command_line)
         self.send_message(command_line)
         self.grabacion = True
