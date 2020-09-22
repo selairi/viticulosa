@@ -368,7 +368,7 @@ def compresion_video(uploaded_file_path):
     # Se comprime el vídeo
     filename = os.path.basename(uploaded_file_path)
     comprimido_file_path = '{0}/{1}'.format(COMPRIMIDOS_DIR, filename)
-    comando = 'ffmpeg -i "{0}" {1} -vcodec libx264 -crf 30 "{2}" > /dev/stderr'.format(uploaded_file_path, calidad, comprimido_file_path)
+    comando = 'ffmpeg -i "{0}" {1} -vcodec libx264 -strict -2 -crf 30 "{2}" > /dev/stderr'.format(uploaded_file_path, calidad, comprimido_file_path)
     os.system(comando)
     sys.stderr.write('\n{0}\n'.format(comando))
     mutex.salir()

@@ -515,7 +515,7 @@ class Handler:
                         break
                 fin.close()
             except Exception as err:
-                print('Error:', err)
+                print('Error en cliente:', err)
             finally:
                 print('closing socket')
                 sock.close()
