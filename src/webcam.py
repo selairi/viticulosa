@@ -284,7 +284,7 @@ class Handler:
             carpeta = carpeta[len('file://'):]
         fecha = datetime.datetime.now()
         #archivo = '{0}/{1}'.format(carpeta, fecha.isoformat(sep=' ', timespec='seconds').replace(':', '·'))
-        archivo = '{0}/{1}'.format(carpeta, fecha.isoformat(sep=' ').replace(':', '·'))
+        archivo = '{0}/{1}'.format(carpeta, fecha.isoformat(sep=' ').replace(':', '·').split('.')[0])
         self.archivo_actual = '{0}.mp4'.format(archivo)
         print(archivo)
         #return

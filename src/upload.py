@@ -180,7 +180,7 @@ def save_uploaded_file():
         print('Se inicia procesar')
         mutex = Locker(MUTEX_SUBIDA)
         ok = -1
-        intentos = 50
+        intentos = 10
         while ok != 0 and intentos > 0:
             if mutex.entrar():
                 try:
@@ -194,7 +194,7 @@ def save_uploaded_file():
                     break
                 if ok != 0:
                     # Cuando se produce un error, se espera un tiempo aleatorio antes de volver a intentarlo
-                    time.sleep(random.randint(3, 10))
+                    time.sleep(random.randint(3, 15))
             intentos -= 1
         exit(ok)
     else:
