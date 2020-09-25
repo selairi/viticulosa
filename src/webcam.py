@@ -300,7 +300,24 @@ class Handler:
             self.reiniciar_camara()
 
     def reiniciar_camara(self):
-        command_line = 'camara: -v v4l2src device=/dev/video0 ! video/x-raw,framerate=10/1 ! videoflip method={0} ! videoflip method={1} ! videoconvert ! autovideosink\n'.format(self.rotacion, self.espejo).encode()
+        #command_line = 'camara: -v v4l2src device=/dev/video0 ! video/x-raw,framerate=10/1 ! videoflip method={0} ! videoflip method={1} ! videoconvert ! autovideosink\n'.format(self.rotacion, self.espejo).encode()
+        rotacion = ""
+        if self.rotacion == 'none':
+            rotacion = ""
+        elif self.rotacion == 'clockwise':
+            rotacion = ",transpose=1"
+        elif self.rotacion == 'rotate-180':
+            rotacion = ",transpose=2,transpose=2"
+        elif self.rotacion == 'counterclockwise':
+            rotacion = ",transpose=3,hflip"
+        espejo = ""
+        if self.espejo == 'none':
+            espejo = ""
+        elif self.espejo == 'horizontal-flip':
+            espejo = ",hflip"
+        elif self.espejo == 'vertical-flip':
+            espejo = ",vflip"
+        command_line = 'camara:  -f v4l2 -i /dev/video0 -vf "format=yuv420p{0}{1}"\n'.format(rotacion, espejo).encode()
         self.send_message(command_line)
         self.camara = True
 

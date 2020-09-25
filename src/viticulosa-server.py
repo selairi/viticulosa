@@ -67,7 +67,7 @@ class Parser:
     def linea(self):
         line = self.line.strip()
         if line.startswith(b'camara:'):
-            command_line = b'gst-launch-1.0 ' + line[len(b'camara:'):].strip()
+            command_line = b'ffplay ' + line[len(b'camara:'):].strip()
             if self.camara != None:
                 self.camara.terminate()
                 self.camara.wait()
