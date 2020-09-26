@@ -280,10 +280,6 @@ def procesar(usuario, password, ruta, uploaded_file_path, filename):
             pass
         else:
             print('Archivo subido')
-            archivos_nube = oc.get_file_contents("/CLASES/archivos.txt").decode("utf-8")
-            bytes_video = os.path.getsize(uploaded_file_path)
-            archivos_nube += '{0}\t{1}\n'.format(archivo_nube, bytes_video)
-            oc.put_file_contents("/CLASES/archivos.txt", archivos_nube.encode())
             os.unlink(uploaded_file_path)
             oc.logout()
             return 0
@@ -294,43 +290,41 @@ def procesar(usuario, password, ruta, uploaded_file_path, filename):
     return 1
 
 
+def ordenar_archivos_nube(e):
+    return e.get_name()
 
 def borrar_archivos_cola_nube(oc, uploaded_file_path, archivo_nube):
     # Se descarga la lista de archivos de la nube y se borran los suficientes para que se pueda subir el vídeo
     bytes_video = os.path.getsize(uploaded_file_path)
-    archivos_nube = ""
+    capacidad_libre = CAPACIDAD_NUBE
+
+    archivos_nube = oc.list("/CLASES", depth = 2)
+    archivos_nube.sort(key=ordenar_archivos_nube)
+
     sys.stderr.write('Se verifica que existe el archivo clases')
     sys.stderr.flush()
-    if owncloud_exists(oc, "/CLASES/archivos.txt"):
-        archivos_nube = oc.get_file_contents("/CLASES/archivos.txt").decode("utf-8")
-    else:
+    if not owncloud_exists(oc, "/CLASES"):
         sys.stderr.write('Creando clases')
         owncloud_mkdir(oc, "/CLASES")
-    archivos_finales = ""
-    capacidad_libre = CAPACIDAD_NUBE
-    sys.stderr.write(archivos_nube)
-    sys.stderr.write("{0}".format(len(archivos_nube.split('\n'))))
-    for archivo in archivos_nube.split('\n'):
-        if len(archivo.strip().split("\t")) > 1:
-            print(archivo.strip().split("\t"))
-            [nombre, tamagno] = archivo.strip().split("\t")
-            capacidad_libre -= int(tamagno)
+
+    for archivo in archivos_nube:
+        if archivo.get_size() != None:
+            capacidad_libre -= archivo.get_size()
+            nombre = "{0}/{1}".format(archivo.get_path(), archivo.get_name())
+            sys.stderr.write(nombre)
 
     # Se borran archivos hasta que haya capacidad en la nube
-    for archivo in archivos_nube.split('\n'):
-        if len(archivo.split("\t")) > 1:
-            [nombre, tamagno] = archivo.split("\t")
+    for archivo in archivos_nube:
+        if archivo.get_size() != None:
+            nombre = "{0}/{1}".format(archivo.get_path(), archivo.get_name())
+            tamagno =  archivo.get_size()
             # Se borran archivos si no hay capacidad o ya estaba en la nube
             sys.stderr.write('\n--{0}--\t--{1}-- {2}\n'.format(nombre, archivo_nube, nombre == archivo_nube))
             if capacidad_libre < bytes_video or nombre == archivo_nube:
-                capacidad_libre += int(tamagno)
+                capacidad_libre += tamagno
                 if owncloud_exists(oc, nombre):
                     oc.delete(nombre)
                 sys.stderr.write('\nEliminando --{0}--\t--{1}--\n'.format(nombre, archivo_nube))
-            else:
-                archivos_finales += '{0}\n'.format(archivo)
-
-    oc.put_file_contents("/CLASES/archivos.txt", archivos_finales.encode())
 
 
 def compresion_video(uploaded_file_path):
@@ -420,7 +414,7 @@ while True:
                         print('Se inicia procesar')
                         mutex = Locker(MUTEX_SUBIDA)
                         ok = -1
-                        intentos = 5
+                        intentos = 10
                         while ok != 0 and intentos > 0:
                             if mutex.entrar():
                                 try:
@@ -434,7 +428,7 @@ while True:
                                     break
                                 if ok != 0:
                                     # Cuando se produce un error, se espera un tiempo aleatorio antes de volver a intentarlo
-                                    time.sleep(random.randint(3, 10))
+                                    time.sleep(random.randint(3, 15))
                             intentos -= 1
                     exit(0)
     finally:

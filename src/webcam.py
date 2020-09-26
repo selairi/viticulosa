@@ -492,10 +492,10 @@ class Handler:
 
     def subir_al_servidor(self):
         print("Subiendo al servidor...")
-        servidor = self.builder.get_object("servidor").get_text()
-        login = self.builder.get_object("login").get_text()
-        password = self.builder.get_object("password").get_text()
-        curso = self.builder.get_object("curso").get_text()
+        servidor = self.builder.get_object("servidor").get_text().strip()
+        login = self.builder.get_object("login").get_text().strip()
+        password = self.builder.get_object("password").get_text().strip()
+        curso = self.builder.get_object("curso").get_text().strip().upper()
         #with open(self.archivo_actual, 'rb') as f:
         #    r = requests.post(servidor.strip()+'/cgi-bin/upload.py',
         #        data={'login': login, 'password': password, 'ruta': '/CLASES/{0}'.format(curso)},
@@ -524,7 +524,7 @@ class Handler:
                 sock.sendall(b'####\n')
                 fin = open(self.archivo_actual, 'rb')
                 while True:
-                    data = fin.read(16)
+                    data = fin.read(1024)
                     #print(data)
                     if data:
                         sock.sendall(data)
